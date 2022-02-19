@@ -1,0 +1,3 @@
+[submodule "PDG-privates"]
+	path = PDG-privates
+	url = https://github.com/2022-solution-challenge/PDG-privates

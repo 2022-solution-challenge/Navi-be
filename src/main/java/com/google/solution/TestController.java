@@ -21,6 +21,6 @@ public class TestController {
 
     @GetMapping("/user/{name}")
     public String helloName(@PathVariable String name) {
-        return "Helloo!  " + name;
+        return "Hello!  " + name;
     }
 }

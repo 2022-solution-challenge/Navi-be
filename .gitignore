@@ -17,6 +17,7 @@ bin/
 /src/main/resources/privates
 !**/src/main/**/bin/
 !**/src/test/**/bin/
+deploy.sh
 
 ### IntelliJ IDEA ###
 .idea

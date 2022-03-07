@@ -3,7 +3,7 @@ spring:
     active: local
 
   config:
-    import: ./privates/application-oauth.yml
+    import: ./privates/application-oauth.yml, ./privates/application-api-key.yml
 
   datasource:
     url: jdbc:h2:mem:testdb

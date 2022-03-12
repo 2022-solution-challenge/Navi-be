@@ -1,4 +1,4 @@
-package com.google.solution;
+package com.google.solution.accident.presentation;
 
 import com.google.solution.accident.domain.AccidentRegion;
 import com.google.solution.accident.domain.AccidentRegionRepository;
@@ -14,25 +14,28 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class TestController {
+public class AccidentRegionController {
 
     private final AccidentRegionRepository accidentRegionRepository;
     private final AccidentDataParser accidentDataParser;
 
 
-    @GetMapping("/")
-    public String index(HttpServletRequest request) {
-        return "Hello!, " + request.getRequestURL();
+    @GetMapping("/regions")
+    public List<AccidentRegion> getRegion(){
+        return accidentRegionRepository.findAll();
     }
 
-    @GetMapping("/home")
-    public String home() {
-        return "home";
+    @GetMapping("/regions/limit")
+    public List<AccidentRegion> getRegionLimit(){
+        return accidentRegionRepository.findTop30ByOrderById();
     }
 
-    @GetMapping("/user/{name}")
-    public String helloName(@PathVariable String name) {
-        return "Hello!  " + name;
+    @GetMapping("/load")
+    public String loadData() throws IOException {
+        accidentRegionRepository.deleteAll();
+        List<AccidentRegion> accidentRegions = accidentDataParser.parseCaliforniaData();
+        accidentRegionRepository.saveAll(accidentRegions);
+        return "sucess";
     }
 
 }

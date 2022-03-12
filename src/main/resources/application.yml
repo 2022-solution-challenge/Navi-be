@@ -1,7 +1,6 @@
-spring:
-  profiles:
-    active: local
 
+---
+spring:
   config:
     import: ./privates/application-oauth.yml, ./privates/application-api-key.yml
 
@@ -16,8 +15,6 @@ spring:
       enabled: true
 
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-
     show-sql: true
     properties:
       hibernate:
@@ -39,3 +36,22 @@ logging:
         type:
           descriptor:
             sql: trace
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+    import: ./privates/application-oauth.yml, ./privates/application-api-key.yml, ./privates/application-gcloud.yml
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_size:20000

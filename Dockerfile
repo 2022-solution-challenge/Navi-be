@@ -9,4 +9,4 @@ FROM gradle:7.1-jdk11-openj9
 WORKDIR /solution-challenge
 EXPOSE 8080
 COPY --from=builder /solution-challenge/build/libs/solution-0.0.1-SNAPSHOT.jar .
-CMD java -jar solution-0.0.1-SNAPSHOT.jar
+CMD java -jar -Dspring.profiles.active=test solution-0.0.1-SNAPSHOT.jar

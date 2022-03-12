@@ -55,5 +55,5 @@ spring:
           batch_size:20000
 
 swagger:
-  host: https://solution-challenge-hb6fjqbi3q-du.a.run.app
+  host: solution-challenge-hb6fjqbi3q-du.a.run.app
   protocol: https

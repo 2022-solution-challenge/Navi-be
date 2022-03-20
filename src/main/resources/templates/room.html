@@ -22,28 +22,43 @@
         var sendBtn = $('.send');
         var roomId = $('.content').data('room-id');
         var member = $('.content').data('member');
-
         // handshake
         var sock = new SockJS("/stomp/chat");
+        let stomp = Stomp.over(sock);
+
+        stomp.connect({}, function (){
+            stomp.subscribe("/topic/stomp/chat/" + roomId, function (chat){
+
+                let element = document.querySelector(".chat_box");
+                let liElement = document.createElement("li")
+                liElement.innerText = chat.body
+                element.append(liElement)
+            });
+
+            stomp.send('/app/chat/enter', {}, JSON.stringify({roomId: roomId, writer: member, message:"123"}));
+
+            sendBtn.click(function () {
+                var message = messageInput.val();
+                stomp.send('/app/chat/message', {}, JSON.stringify({roomId: roomId, message: message, writer: member}));
+                messageInput.val('');
+            });
+        });
+
 
         // onopen : connection이 맺어졌을 때의 callback
-        sock.onopen = function () {
-            // send : connection으로 message를 전달
-            // connection이 맺어진 후 가입(JOIN) 메시지를 전달
-            sock.send(JSON.stringify({chatRoomId: roomId, type: 'JOIN', writer: member}));
+        // sock.onopen = function () {
+        //     // send : connection으로 message를 전달
+        //     // connection이 맺어진 후 가입(JOIN) 메시지를 전달
+        //     sock.send('/app/chat/enter', {}, JSON.stringify({roomId: roomId, writer: member, message:"123"}));
+        //
+        //     // onmessage : message를 받았을 때의 callback
+        //     sock.onmessage = function (e) {
+        //         var content = JSON.parse(e.data);
+        //         chatBox.append('<li>' + content.message + '(' + content.writer + ')</li>')
+        //     }
+        // }
 
-            // onmessage : message를 받았을 때의 callback
-            sock.onmessage = function (e) {
-                var content = JSON.parse(e.data);
-                chatBox.append('<li>' + content.message + '(' + content.writer + ')</li>')
-            }
-        }
 
-        sendBtn.click(function () {
-            var message = messageInput.val();
-            sock.send(JSON.stringify({chatRoomId: roomId, type: 'CHAT', message: message, writer: member}));
-            messageInput.val('');
-        });
     });
 </script>
 </body>

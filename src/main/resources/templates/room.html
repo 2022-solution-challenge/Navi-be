@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>[[${room.name}]]</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<h1>[[${room.name}]]</h1>
+<div class="content" th:data-room-id="${room.id}" th:data-member="${member}">
+    <ul class="chat_box">
+    </ul>
+    <input name="message">
+    <button class="send">보내기</button>
+</div>
+<script th:inline="javascript">
+    $(function () {
+        var chatBox = $('.chat_box');
+        var messageInput = $('input[name="message"]');
+        var sendBtn = $('.send');
+        var roomId = $('.content').data('room-id');
+        var member = $('.content').data('member');
+
+        // handshake
+        var sock = new SockJS("/stomp/chat");
+
+        // onopen : connection이 맺어졌을 때의 callback
+        sock.onopen = function () {
+            // send : connection으로 message를 전달
+            // connection이 맺어진 후 가입(JOIN) 메시지를 전달
+            sock.send(JSON.stringify({chatRoomId: roomId, type: 'JOIN', writer: member}));
+
+            // onmessage : message를 받았을 때의 callback
+            sock.onmessage = function (e) {
+                var content = JSON.parse(e.data);
+                chatBox.append('<li>' + content.message + '(' + content.writer + ')</li>')
+            }
+        }
+
+        sendBtn.click(function () {
+            var message = messageInput.val();
+            sock.send(JSON.stringify({chatRoomId: roomId, type: 'CHAT', message: message, writer: member}));
+            messageInput.val('');
+        });
+    });
+</script>
+</body>
+</html>

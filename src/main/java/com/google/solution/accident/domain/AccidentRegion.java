@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class AccidentRegion {
+public class    AccidentRegion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "test-sequence-generator")

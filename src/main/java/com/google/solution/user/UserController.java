@@ -1,7 +1,15 @@
 package com.google.solution.user;
 
-import com.google.solution.user.OAuthProvider.UserInfo;
+import com.google.solution.user.dto.LoginRequest;
+import com.google.solution.user.dto.RegistrationRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+import com.google.solution.user.OAuthProvider.UserInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,10 +20,10 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/users")
 public class UserController {
 
-    private static final String ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
-
+    private final UserService userService;
     @Value("${spring.google.oauth.client_id}")
     private String CLIENT_ID ;
     @Value("${spring.google.oauth.redirect_uri:http://localhost:8080/login/oauth2/google}")
@@ -24,20 +32,15 @@ public class UserController {
     private static final String SCOPE = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
     private final OAuthProvider oAuthProvider;
 
-
-    @GetMapping("/login")
-    public void login(HttpServletResponse response) throws IOException {
-        System.out.println(CLIENT_ID + REDIRECT_URI);
-        String redirectURL = ENDPOINT + "?client_id=" + CLIENT_ID + "&redirect_uri=" + REDIRECT_URI
-                + "&response_type=" + RESPONSE_TYPE + "&scope=" + SCOPE;
-        System.out.println(redirectURL);
-        response.sendRedirect(redirectURL);
+    @PostMapping("")
+    public ResponseEntity<Void> register(@RequestBody RegistrationRequest request){
+        Long userId = userService.saveUser(request);
+        return ResponseEntity.created(URI.create("/users/" + userId)).build();
     }
 
-    @GetMapping("/login/oauth2/google")
-    public UserInfo redirectLogin(@RequestParam(name = "code") String code) {
-        UserInfo userInfo = oAuthProvider.getUserInfoByApi(code);
-        return userInfo;
-        // send redirect to Client with data
+    @GetMapping("/login")
+    public String login(@RequestBody LoginRequest request){
+        String token = userService.signIn(request);
+        return token;
     }
 }

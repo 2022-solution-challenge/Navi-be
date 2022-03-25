@@ -13,20 +13,10 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class    AccidentRegion {
+public class UserAccidentRegion {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "test-sequence-generator")
-    @GenericGenerator(
-            name = "test-sequence-generator",
-            strategy = "sequence",
-            parameters = {
-                    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = SequenceStyleGenerator.DEF_SEQUENCE_NAME),
-                    @Parameter(name = SequenceStyleGenerator.INITIAL_PARAM, value = "1"),
-                    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1000"),
-                    @Parameter(name = AvailableSettings.PREFERRED_POOLED_OPTIMIZER, value = "pooled-lo")
-            }
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String severity;
@@ -46,11 +36,11 @@ public class    AccidentRegion {
     @Enumerated(EnumType.STRING)
     private State state;
 
-    public AccidentRegion(String severity, double startLat, double startLng, double endLat, double endLng, double distance, String description, State state) {
+    public UserAccidentRegion(String severity, double startLat, double startLng, double endLat, double endLng, double distance, String description, State state) {
         this(null, severity, startLat, startLng, endLat, endLng, distance, description, state);
     }
 
-    private AccidentRegion(Long id, String severity, double startLat, double startLng, double endLat, double endLng, double distance, String description, State state) {
+    private UserAccidentRegion(Long id, String severity, double startLat, double startLng, double endLat, double endLng, double distance, String description, State state) {
         this.id = id;
         this.severity = severity;
         this.startLat = startLat;

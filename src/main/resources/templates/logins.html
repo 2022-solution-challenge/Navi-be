@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div class="content">
+    <p>Authentication is complete. If this does not happen automatically, please
+        close the window.</p>
+</div>
+<script>
+    window.postMessage({
+        'flutter-web-auth': window.location.href
+    }, window.location.origin);
+    window.close();
+</script>
+</body>
+</html>
+

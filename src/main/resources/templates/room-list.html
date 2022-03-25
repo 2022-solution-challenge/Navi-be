@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+        <div class="container">
+            <div>
+                <ul th:each="room : ${list}">
+                    <li><a th:text="${room.name}" th:href="@{/chat/rooms/{roomId}(roomId = ${room.id})}"></a></li>
+                </ul>
+            </div>
+        </div>
+        <form th:action="@{/chat/rooms}" method="post">
+            <input type="text" name="name" class="form-control">
+            <button class="btn btn-secondary">개설하기</button>
+        </form>
+    </th:block>
+</th:block>
+
+</html>

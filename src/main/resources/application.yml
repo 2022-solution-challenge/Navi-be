@@ -17,6 +17,9 @@ spring:
     properties:
       hibernate:
       format_sql: true
+    hibernate:
+      ddl-auto: create-drop
+
 
   mvc:
     static-path-pattern: /static/**
